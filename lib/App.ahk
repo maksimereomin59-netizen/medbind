@@ -10,6 +10,8 @@ class App {
         Storage.Initialize(A_ScriptDir)
         Logger.Initialize(Storage.LogsDirectory)
         Logger.Info(Constants.AppName " " Constants.AppVersion " starting")
+        DataModel.Initialize()
+        Logger.Info("Data model initialized")
 
         ; Class methods must be explicitly bound when used as callbacks in AHK v2.
         OnExit(ObjBindMethod(App, "HandleExit"))

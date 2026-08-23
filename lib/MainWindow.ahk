@@ -75,16 +75,17 @@ class MainWindow {
 
         this.Controls["listCard"] := this.Gui.Add("GroupBox", "x264 y216 w846 h255 c" Theme.Get("border"), "")
         this.Controls["listHeader"] := Controls.AddLabel(this.Gui, "x286 y232 w800 h22", "#       НАЗВАНИЕ                 КЛАВИША        ДЕЙСТВИЕ                         ЗАДЕРЖКА", "muted", 8, "600")
-        samples := [
-            ["001", "Приветствие", "F1", "/r Здравствуйте, я ваш лечащий врач...", "0 мс"],
-            ["002", "Лечение", "F2", "/me передал таблетку пациенту", "500 мс"],
-            ["003", "Вакцинация", "F3", "/me достал шприц с вакциной", "600 мс"],
-            ["004", "Мед. осмотр", "F4", "/do Давление в норме.", "700 мс"],
-            ["005", "Вызов коллег", "F5", "/r Нужен хирург в операционную", "1.0 с"]
-        ]
+        binds := DataModel.GetBinds()
+        bindCount := binds.Length
+        this.Controls["pageTitle"].Text := "СПИСОК БИНДОВ (" bindCount " / 100)"
+        this.Controls["filterAll"].Text := "Все  " bindCount " / 100"
+        this.Controls["filterStatus"].Text := "Активные  " bindCount
         y := 265
         this.SampleRows := []
-        for index, row in samples {
+        for index, bind in binds {
+            if index > 5
+                break
+            row := [Format("{1:03}", index), bind["name"], bind["hotkey"], bind["lines"][1]["text"], bind["delay"] " мс"]
             bg := this.Gui.Add("Text", "x276 y" y " w822 h34 Background" (Mod(index, 2) ? Theme.Get("card") : Theme.Get("panel")))
             number := Controls.AddLabel(this.Gui, "x292 y" (y + 8) " w40 h18", row[1], "muted", 9)
             name := Controls.AddLabel(this.Gui, "x340 y" (y + 8) " w155 h18", (index = 2 ? "★  " : "") row[2], index = 2 ? "accent" : "text", 9, "600")
