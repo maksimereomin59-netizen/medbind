@@ -100,6 +100,7 @@ class MainWindow {
             action := Controls.AddLabel(this.Gui, "x590 y" (y + 8) " w300 h18", row[4], "text", 9)
             delay := Controls.AddLabel(this.Gui, "x930 y" (y + 8) " w75 h18", row[5], "muted", 9)
             status := Controls.AddLabel(this.Gui, "x1028 y" (y + 8) " w55 h18", bind["enabled"] ? "● ON" : "○ OFF", bind["enabled"] ? "green" : "muted", 8, "600")
+            status.OnEvent("Click", ObjBindMethod(MainWindow, "ToggleBind", bind["id"]))
             selectBind := ObjBindMethod(MainWindow, "SelectBind", bind["id"])
             bg.OnEvent("Click", selectBind)
             number.OnEvent("Click", selectBind)
@@ -338,6 +339,16 @@ class MainWindow {
         }
         Overlay.Refresh()
         RadialMenu.Refresh()
+    }
+
+    static ToggleBind(bindId, *) {
+        try {
+            enabled := BindManager.Toggle(bindId)
+            this.Refresh()
+            Toasts.Show(enabled ? "Бинд включён" : "Бинд выключен")
+        } catch Error as err {
+            ErrorHandler.Handle(err, "toggle bind")
+        }
     }
 
     static SetIdAction(*) {
