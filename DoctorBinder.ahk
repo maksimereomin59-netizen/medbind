@@ -15,6 +15,9 @@ Persistent
 #Include lib\Json.ahk
 #Include lib\DataValidation.ahk
 #Include lib\DataModel.ahk
+#Include lib\History.ahk
+#Include lib\Backup.ahk
+#Include lib\UndoRedo.ahk
 #Include lib\BindManager.ahk
 #Include lib\BindEditor.ahk
 #Include lib\ConflictResolver.ahk

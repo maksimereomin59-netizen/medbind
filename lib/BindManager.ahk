@@ -1,5 +1,7 @@
 class BindManager {
     static Create(name := "Новый бинд", categoryId := "general", hotkey := "") {
+        UndoRedo.Record("создание бинда")
+        Backup.CreateCurrent("before-create")
         binds := DataModel.GetBinds()
         id := this.NextId(binds)
         line := Map("id", id "-line-001", "text", "/me действие", "delay", 500, "enabled", true, "sendEnter", true, "type", "command")
@@ -25,6 +27,8 @@ class BindManager {
         bind := this.Find(bindId)
         if !bind
             throw Error("Bind not found: " bindId)
+        UndoRedo.Record("изменение бинда")
+        Backup.CreateCurrent("before-update")
         bind["name"] := name != "" ? name : "Без названия"
         bind["categoryId"] := categoryId != "" ? categoryId : "general"
         bind["hotkey"] := hotkey
@@ -51,6 +55,8 @@ class BindManager {
         binds := DataModel.GetBinds()
         for index, bind in binds {
             if bind["id"] = bindId {
+                UndoRedo.Record("удаление бинда")
+                Backup.CreateCurrent("before-delete")
                 binds.RemoveAt(index)
                 DataModel.Save()
                 Logger.Activity("Deleted bind: " bindId)

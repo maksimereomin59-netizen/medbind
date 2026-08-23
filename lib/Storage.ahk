@@ -46,6 +46,13 @@ class Storage {
         return FileRead(path, encoding)
     }
 
+    static WriteTextAppend(path, content, encoding := "UTF-8") {
+        directory := RegExReplace(path, "[\\/][^\\/]+$", "")
+        if directory != "" && !DirExist(directory)
+            DirCreate(directory)
+        FileAppend(content, path, encoding)
+    }
+
     static WriteText(path, content, encoding := "UTF-8") {
         directory := RegExReplace(path, "[\\/][^\\/]+$", "")
         if directory != "" && !DirExist(directory)

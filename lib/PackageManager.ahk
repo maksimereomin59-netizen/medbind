@@ -45,6 +45,7 @@ class PackageManager {
             answer := MsgBox(prompt, Constants.AppName " — импорт", "Iconi YesNo")
             if answer != "Yes"
                 return false
+            Backup.CreateCurrent("before-import")
             DataModel.SaveProfile(profile)
             if profile["id"] = DataModel.CurrentProfile["id"] {
                 DataModel.CurrentProfile := DataModel.LoadProfile(profile["id"])
