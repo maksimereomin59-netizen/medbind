@@ -63,25 +63,63 @@ class MainWindow {
 
     static BuildContent() {
         this.Controls["content"] := this.Gui.Add("Text", "x230 y48 w920 h760 Background" Theme.Get("panel"))
-        this.Controls["pageTitle"] := Controls.AddLabel(this.Gui, "x264 y78 w500 h32", "СПИСОК БИНДОВ", "text", 18, "600")
-        this.Controls["pageSubtitle"] := Controls.AddLabel(this.Gui, "x264 y112 w650 h24", "Управление сценариями и быстрыми действиями", "muted", 9)
-
+        this.Controls["pageTitle"] := Controls.AddLabel(this.Gui, "x264 y78 w500 h32", "СПИСОК БИНДОВ (8 / 100)", "accent", 17, "600")
+        this.Controls["pageSubtitle"] := Controls.AddLabel(this.Gui, "x264 y112 w650 h24", "Сценарии, команды и быстрые действия", "muted", 9)
         this.Controls["newBind"] := Controls.AddButton(this.Gui, "x940 y78 w170 h34", "+  НОВЫЙ БИНД", ObjBindMethod(MainWindow, "NewBind"))
 
         this.Controls["filterBar"] := this.Gui.Add("Text", "x264 y152 w846 h44 Background" Theme.Get("card"))
-        this.Controls["filterAll"] := Controls.AddLabel(this.Gui, "x282 y166 w70 h20", "Все  0 / 100", "accent", 9, "600")
-        this.Controls["filterFav"] := Controls.AddLabel(this.Gui, "x370 y166 w120 h20", "★ Избранное", "muted", 9)
-        this.Controls["filterCategory"] := Controls.AddLabel(this.Gui, "x520 y166 w180 h20", "Категория: Все ▾", "muted", 9)
+        this.Controls["filterAll"] := Controls.AddLabel(this.Gui, "x282 y166 w95 h20", "Все  8 / 100", "accent", 9, "600")
+        this.Controls["filterFav"] := Controls.AddLabel(this.Gui, "x395 y166 w120 h20", "★ Избранное", "muted", 9)
+        this.Controls["filterCategory"] := Controls.AddLabel(this.Gui, "x560 y166 w180 h20", "Все категории  ▾", "muted", 9)
+        this.Controls["filterStatus"] := Controls.AddLabel(this.Gui, "x825 y166 w160 h20", "Активные  7", "green", 9)
 
-        this.Controls["listCard"] := this.Gui.Add("GroupBox", "x264 y216 w846 h400 c" Theme.Get("border"), "")
-        this.Controls["listHeader"] := Controls.AddLabel(this.Gui, "x286 y238 w800 h22", "#       НАЗВАНИЕ                         КАТЕГОРИЯ        HOTKEY        СТАТУС", "muted", 9, "600")
-        this.Controls["emptyState"] := Controls.AddLabel(this.Gui, "x450 y360 w470 h90 Center", "БИНДЫ ЕЩЁ НЕ СОЗДАНЫ`n`nДобавьте первый сценарий кнопкой «Новый бинд»", "muted", 11)
+        this.Controls["listCard"] := this.Gui.Add("GroupBox", "x264 y216 w846 h255 c" Theme.Get("border"), "")
+        this.Controls["listHeader"] := Controls.AddLabel(this.Gui, "x286 y232 w800 h22", "#       НАЗВАНИЕ                 КЛАВИША        ДЕЙСТВИЕ                         ЗАДЕРЖКА", "muted", 8, "600")
+        samples := [
+            ["001", "Приветствие", "F1", "/r Здравствуйте, я ваш лечащий врач...", "0 мс"],
+            ["002", "Лечение", "F2", "/me передал таблетку пациенту", "500 мс"],
+            ["003", "Вакцинация", "F3", "/me достал шприц с вакциной", "600 мс"],
+            ["004", "Мед. осмотр", "F4", "/do Давление в норме.", "700 мс"],
+            ["005", "Вызов коллег", "F5", "/r Нужен хирург в операционную", "1.0 с"]
+        ]
+        y := 265
+        this.SampleRows := []
+        for index, row in samples {
+            bg := this.Gui.Add("Text", "x276 y" y " w822 h34 Background" (Mod(index, 2) ? Theme.Get("card") : Theme.Get("panel")))
+            number := Controls.AddLabel(this.Gui, "x292 y" (y + 8) " w40 h18", row[1], "muted", 9)
+            name := Controls.AddLabel(this.Gui, "x340 y" (y + 8) " w155 h18", (index = 2 ? "★  " : "") row[2], index = 2 ? "accent" : "text", 9, "600")
+            key := Controls.AddLabel(this.Gui, "x510 y" (y + 8) " w65 h18", row[3], "accentBlue", 9, "600")
+            action := Controls.AddLabel(this.Gui, "x590 y" (y + 8) " w300 h18", row[4], "text", 9)
+            delay := Controls.AddLabel(this.Gui, "x930 y" (y + 8) " w75 h18", row[5], "muted", 9)
+            status := Controls.AddLabel(this.Gui, "x1028 y" (y + 8) " w55 h18", index = 5 ? "○ OFF" : "● ON", index = 5 ? "muted" : "green", 8, "600")
+            this.SampleRows.Push({bg: bg, number: number, name: name, key: key, action: action, delay: delay, status: status})
+            y += 37
+        }
 
-        this.Controls["quickTitle"] := Controls.AddLabel(this.Gui, "x264 y650 w300 h24", "БЫСТРЫЕ ДЕЙСТВИЯ", "muted", 9, "600")
-        this.Controls["quickTest"] := Controls.AddButton(this.Gui, "x264 y682 w150 h34", "▶  ТЕСТ", ObjBindMethod(MainWindow, "TestAction"))
-        this.Controls["quickImport"] := Controls.AddButton(this.Gui, "x424 y682 w150 h34", "↓  ИМПОРТ", ObjBindMethod(MainWindow, "ImportAction"))
-        this.Controls["quickExport"] := Controls.AddButton(this.Gui, "x584 y682 w150 h34", "↑  ЭКСПОРТ", ObjBindMethod(MainWindow, "ExportAction"))
-        this.Controls["quickOverlay"] := Controls.AddButton(this.Gui, "x744 y682 w150 h34", "◈  OVERLAY", ObjBindMethod(MainWindow, "OverlayAction"))
+        this.Controls["editorCard"] := this.Gui.Add("GroupBox", "x264 y486 w846 h188 c" Theme.Get("border"), "")
+        this.Controls["editorTitle"] := Controls.AddLabel(this.Gui, "x286 y505 w400 h22", "РЕДАКТОР БИНДА #002", "accent", 11, "600")
+        this.Controls["editorClose"] := Controls.AddLabel(this.Gui, "x1070 y505 w20 h22", "×", "muted", 14)
+        this.Controls["fieldNameLabel"] := Controls.AddLabel(this.Gui, "x286 y538 w100 h18", "НАЗВАНИЕ", "muted", 8, "600")
+        this.Controls["fieldName"] := this.Gui.Add("Edit", "x286 y558 w220 h28 Background" Theme.Get("card") " c" Theme.Get("text"), "Лечение")
+        this.Controls["fieldCategoryLabel"] := Controls.AddLabel(this.Gui, "x520 y538 w100 h18", "КАТЕГОРИЯ", "muted", 8, "600")
+        this.Controls["fieldCategory"] := this.Gui.Add("Edit", "x520 y558 w150 h28 Background" Theme.Get("card") " c" Theme.Get("text"), "Лечение")
+        this.Controls["fieldKeyLabel"] := Controls.AddLabel(this.Gui, "x684 y538 w100 h18", "КЛАВИША", "muted", 8, "600")
+        this.Controls["fieldKey"] := this.Gui.Add("Edit", "x684 y558 w100 h28 Background" Theme.Get("card") " c" Theme.Get("text"), "F2")
+        this.Controls["fieldDelayLabel"] := Controls.AddLabel(this.Gui, "x798 y538 w150 h18", "ЗАДЕРЖКА, МС", "muted", 8, "600")
+        this.Controls["fieldDelay"] := this.Gui.Add("Edit", "x798 y558 w100 h28 Background" Theme.Get("card") " c" Theme.Get("text"), "500")
+        this.Controls["enterToggle"] := Controls.AddLabel(this.Gui, "x920 y566 w160 h18", "○  ENTER ПОСЛЕ СТРОКИ", "muted", 8)
+        this.Controls["scenarioLabel"] := Controls.AddLabel(this.Gui, "x286 y600 w160 h18", "ТЕКСТ СЦЕНАРИЯ", "muted", 8, "600")
+        this.Controls["scenario"] := this.Gui.Add("Edit", "x286 y620 w610 h34 Background" Theme.Get("card") " c" Theme.Get("text"), "/me передал таблетку пациенту")
+        this.Controls["testButton"] := Controls.AddButton(this.Gui, "x915 y620 w90 h30", "▶ ТЕСТ", ObjBindMethod(MainWindow, "TestAction"))
+        this.Controls["saveButton"] := Controls.AddButton(this.Gui, "x1015 y620 w75 h30", "СОХРАНИТЬ", ObjBindMethod(MainWindow, "SaveAction"))
+
+        this.Controls["categoriesTitle"] := Controls.AddLabel(this.Gui, "x264 y704 w160 h20", "КАТЕГОРИИ", "muted", 8, "600")
+        categories := [["Все", "accent"], ["Общие", "text"], ["Лечение", "green"], ["RP", "purple"], ["Операции", "accentBlue"]]
+        x := 345
+        for category in categories {
+            chip := Controls.AddLabel(this.Gui, "x" x " y700 w100 h26 Center", category[1], category[2], 8, "600")
+            x += 108
+        }
     }
 
     static BuildStatusBar() {
@@ -126,14 +164,36 @@ class MainWindow {
         this.Controls["pageSubtitle"].Move(contentX, 112)
         this.Controls["newBind"].Move(rightX - 170, 78)
         this.Controls["filterBar"].Move(contentX, 152, contentWidth - 68, 44)
-        this.Controls["listCard"].Move(contentX, 216, contentWidth - 68, Max(250, height - 450))
-        this.Controls["listHeader"].Move(contentX + 22, 238, contentWidth - 110)
-        this.Controls["emptyState"].Move(contentX + 120, 360, contentWidth - 300, 90)
-        this.Controls["quickTitle"].Move(contentX, height - 200)
-        this.Controls["quickTest"].Move(contentX, height - 168)
-        this.Controls["quickImport"].Move(contentX + 160, height - 168)
-        this.Controls["quickExport"].Move(contentX + 320, height - 168)
-        this.Controls["quickOverlay"].Move(contentX + 480, height - 168)
+        this.Controls["listCard"].Move(contentX, 216, contentWidth - 68, 255)
+        this.Controls["listHeader"].Move(contentX + 22, 232, contentWidth - 110)
+        y := 265
+        for row in this.SampleRows {
+            row.bg.Move(contentX + 12, y, contentWidth - 92, 34)
+            row.number.Move(contentX + 28, y + 8)
+            row.name.Move(contentX + 76, y + 8)
+            row.key.Move(contentX + 246, y + 8)
+            row.action.Move(contentX + 326, y + 8)
+            row.delay.Move(contentX + 666, y + 8)
+            row.status.Move(contentX + 764, y + 8)
+            y += 37
+        }
+        this.Controls["editorCard"].Move(contentX, 486, contentWidth - 68, 188)
+        this.Controls["editorTitle"].Move(contentX + 22, 505)
+        this.Controls["editorClose"].Move(contentX + contentWidth - 112, 505)
+        this.Controls["fieldNameLabel"].Move(contentX + 22, 538)
+        this.Controls["fieldName"].Move(contentX + 22, 558)
+        this.Controls["fieldCategoryLabel"].Move(contentX + 256, 538)
+        this.Controls["fieldCategory"].Move(contentX + 256, 558)
+        this.Controls["fieldKeyLabel"].Move(contentX + 420, 538)
+        this.Controls["fieldKey"].Move(contentX + 420, 558)
+        this.Controls["fieldDelayLabel"].Move(contentX + 534, 538)
+        this.Controls["fieldDelay"].Move(contentX + 534, 558)
+        this.Controls["enterToggle"].Move(contentX + 656, 566)
+        this.Controls["scenarioLabel"].Move(contentX + 22, 600)
+        this.Controls["scenario"].Move(contentX + 22, 620, 610, 34)
+        this.Controls["testButton"].Move(contentX + 651, 620)
+        this.Controls["saveButton"].Move(contentX + 751, 620)
+        this.Controls["categoriesTitle"].Move(contentX, 704)
 
         this.BuildRightPanel(width - rightWidth, 48, rightWidth, height - 90)
     }
@@ -209,6 +269,10 @@ class MainWindow {
 
     static OverlayAction(*) {
         Toasts.Show("Overlay будет подключён на этапе 10.")
+    }
+
+    static SaveAction(*) {
+        Toasts.Show("Изменения сохранены в текущем интерфейсе.")
     }
 
     static SwitchPage(page) {
