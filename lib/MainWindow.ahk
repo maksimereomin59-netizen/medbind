@@ -94,7 +94,7 @@ class MainWindow {
     static Show() {
         this.Create()
         this.Gui.Show("w1400 h850")
-        this.Gui.Focus()
+        WinActivate("ahk_id " this.Gui.Hwnd)
     }
 
     static Layout(width, height) {
