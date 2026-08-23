@@ -54,7 +54,7 @@ class SettingsManager {
         this.Controls["telegramTest"].OnEvent("Click", ObjBindMethod(SettingsManager, "TelegramTest"))
         tabs.UseTab()
 
-        this.Controls["save"] := this.Gui.Add("Button", "x300 y375 w100 h32", "СОХРАНИТЬ") := this.Gui.Add("Button", "x300 y375 w100 h32", "СОХРАНИТЬ")
+        this.Controls["save"] := this.Gui.Add("Button", "x300 y375 w100 h32", "СОХРАНИТЬ")
         this.Controls["save"].OnEvent("Click", ObjBindMethod(SettingsManager, "Save"))
         this.Controls["cancel"] := this.Gui.Add("Button", "x410 y375 w90 h32", "ОТМЕНА")
         this.Controls["cancel"].OnEvent("Click", ObjBindMethod(SettingsManager, "Close"))
