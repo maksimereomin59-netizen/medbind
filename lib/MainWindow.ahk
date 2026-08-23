@@ -6,6 +6,7 @@ class MainWindow {
     static NavControls := Map()
     static CurrentPage := "binds"
     static IsMaximized := false
+    static EventsBound := false
 
     static Create() {
         if this.Gui
@@ -23,6 +24,10 @@ class MainWindow {
         this.BuildSidebar()
         this.BuildContent()
         this.BuildStatusBar()
+        if !this.EventsBound {
+            EventBus.Subscribe("NewIdDetected", ObjBindMethod(MainWindow, "HandleNewId"))
+            this.EventsBound := true
+        }
         this.Layout(1400, 850)
         return this.Gui
     }
@@ -312,6 +317,13 @@ class MainWindow {
         Toasts.Show("Overlay будет подключён на этапе 10.")
     }
 
+    static HandleNewId(payload) {
+        if this.Gui && this.Controls.Has("currentIdValue") {
+            this.Controls["currentIdValue"].Text := "ID: " payload["id"]
+            this.Controls["idEdit"].Value := payload["id"]
+        }
+    }
+
     static SetIdAction(*) {
         try {
             value := IDManager.Set(this.Controls["idEdit"].Value)
@@ -390,6 +402,12 @@ class MainWindow {
             control.SetFont(Theme.Font(10, key = page ? "accent" : "muted", "600"), "Segoe UI")
         }
         Logger.Activity("Opened page: " page)
-        Toasts.Show("Открыт раздел: " Navigation.PageTitle(page))
+        if page = "chat" {
+            try ChatMonitor.Configure()
+            catch Error as err
+                ErrorHandler.Handle(err, "configure chat monitor")
+        } else {
+            Toasts.Show("Открыт раздел: " Navigation.PageTitle(page))
+        }
     }
 }

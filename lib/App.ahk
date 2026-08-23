@@ -13,6 +13,7 @@ class App {
         DataModel.Initialize()
         Logger.Info("Data model initialized")
         IDManager.Initialize()
+        ChatMonitor.Initialize()
         HotkeyManager.Initialize()
 
         ; Class methods must be explicitly bound when used as callbacks in AHK v2.
@@ -67,6 +68,7 @@ class App {
         if !this.started
             return
         try {
+            ChatMonitor.Stop()
             BindSender.Stop(false)
             HotkeyManager.UnregisterAll()
             State.Set("isRunning", false)
