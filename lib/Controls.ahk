@@ -10,7 +10,7 @@ class Controls {
         options := options " -Theme"
         control := gui.Add("Button", options, text)
         if IsSet(callback)
-            control.OnEvent("Click", callback)
+            control.OnEvent("Click", (*) => callback())
         return control
     }
 
