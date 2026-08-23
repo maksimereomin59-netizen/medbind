@@ -66,6 +66,7 @@ class App {
         if !this.started
             return
         try {
+            BindSender.Stop(false)
             HotkeyManager.UnregisterAll()
             State.Set("isRunning", false)
             Logger.Info("Binder stopped. Reason: " exitReason "; code: " exitCode)

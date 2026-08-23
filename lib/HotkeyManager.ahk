@@ -66,7 +66,7 @@ class HotkeyManager {
         }
         State.Set("selectedBindId", bindId)
         Logger.Activity("Hotkey pressed: " bind["hotkey"] " → " bind["name"])
-        Toasts.Show("Запуск: " bind["name"])
+        BindSender.Start(bind)
     }
 
     static ToggleBinder(*) {

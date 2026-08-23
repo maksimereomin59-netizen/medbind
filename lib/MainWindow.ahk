@@ -122,6 +122,7 @@ class MainWindow {
         this.Controls["addLineButton"] := Controls.AddButton(this.Gui, "x800 y620 w90 h30", "+ СТРОКА", ObjBindMethod(MainWindow, "AddLine"))
         this.Controls["removeLineButton"] := Controls.AddButton(this.Gui, "x800 y654 w90 h30", "− СТРОКА", ObjBindMethod(MainWindow, "RemoveLine"))
         this.Controls["testButton"] := Controls.AddButton(this.Gui, "x900 y620 w90 h30", "▶ ТЕСТ", ObjBindMethod(MainWindow, "TestAction"))
+        this.Controls["stopButton"] := Controls.AddButton(this.Gui, "x900 y654 w90 h30", "■ STOP", ObjBindMethod(MainWindow, "StopAction"))
         this.Controls["saveButton"] := Controls.AddButton(this.Gui, "x1000 y620 w90 h30", "СОХРАНИТЬ", ObjBindMethod(MainWindow, "SaveAction"))
 
         this.Controls["categoriesTitle"] := Controls.AddLabel(this.Gui, "x264 y704 w160 h20", "КАТЕГОРИИ", "muted", 8, "600")
@@ -205,6 +206,7 @@ class MainWindow {
         this.Controls["addLineButton"].Move(contentX + 536, 620)
         this.Controls["removeLineButton"].Move(contentX + 536, 654)
         this.Controls["testButton"].Move(contentX + 636, 620)
+        this.Controls["stopButton"].Move(contentX + 636, 654)
         this.Controls["saveButton"].Move(contentX + 736, 620)
         this.Controls["categoriesTitle"].Move(contentX, 704)
 
@@ -276,7 +278,18 @@ class MainWindow {
     }
 
     static TestAction(*) {
-        Toasts.Show("Тестовый режим будет подключён на этапе 5.")
+        try {
+            bind := BindManager.Find(State.Get("selectedBindId", ""))
+            if !bind
+                throw Error("No bind is selected")
+            BindSender.Test(bind)
+        } catch Error as err {
+            ErrorHandler.Handle(err, "test bind")
+        }
+    }
+
+    static StopAction(*) {
+        BindSender.Stop()
     }
 
     static ImportAction(*) {
