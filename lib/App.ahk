@@ -12,6 +12,7 @@ class App {
         Logger.Info(Constants.AppName " " Constants.AppVersion " starting")
         DataModel.Initialize()
         Logger.Info("Data model initialized")
+        IDManager.Initialize()
         HotkeyManager.Initialize()
 
         ; Class methods must be explicitly bound when used as callbacks in AHK v2.

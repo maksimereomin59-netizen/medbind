@@ -219,6 +219,10 @@ class MainWindow {
             this.Controls["rightTitle"] := Controls.AddLabel(this.Gui, "", "SYSTEM STATUS", "muted", 9, "600")
             this.Controls["systemCard"] := this.Gui.Add("GroupBox", "c" Theme.Get("border"), "")
             this.Controls["systemText"] := Controls.AddLabel(this.Gui, "", "●  CORE ONLINE`n●  STORAGE READY`n○  OVERLAY OFF`n○  CHAT MONITOR OFF", "green", 9)
+            this.Controls["currentIdTitle"] := Controls.AddLabel(this.Gui, "", "CURRENT ID", "muted", 8, "600")
+            this.Controls["currentIdValue"] := Controls.AddLabel(this.Gui, "", "ID: " IDManager.Get(), "accent", 10, "600")
+            this.Controls["idEdit"] := this.Gui.Add("Edit", "Background" Theme.Get("card") " c" Theme.Get("text"), IDManager.Get())
+            this.Controls["idSet"] := Controls.AddButton(this.Gui, "", "SET", ObjBindMethod(MainWindow, "SetIdAction"))
             this.Controls["rightHotkeysTitle"] := Controls.AddLabel(this.Gui, "", "HOTKEYS", "muted", 9, "600")
             this.Controls["rightHotkeys"] := Controls.AddLabel(this.Gui, "", "Ctrl+K    Command Palette`nF12       Toggle Binder`nF10       Overlay", "text", 9)
             this.Controls["rightLogTitle"] := Controls.AddLabel(this.Gui, "", "LAST ACTION", "muted", 9, "600")
@@ -228,10 +232,14 @@ class MainWindow {
         this.Controls["rightTitle"].Move(x + 24, y + 30, width - 40, 20)
         this.Controls["systemCard"].Move(x + 18, y + 62, width - 36, 145)
         this.Controls["systemText"].Move(x + 36, y + 90, width - 60, 90)
-        this.Controls["rightHotkeysTitle"].Move(x + 24, y + 240, width - 40, 20)
-        this.Controls["rightHotkeys"].Move(x + 24, y + 270, width - 40, 85)
-        this.Controls["rightLogTitle"].Move(x + 24, y + 400, width - 40, 20)
-        this.Controls["rightLog"].Move(x + 24, y + 430, width - 40, 60)
+        this.Controls["currentIdTitle"].Move(x + 24, y + 222, width - 40, 18)
+        this.Controls["currentIdValue"].Move(x + 24, y + 242, 90, 20)
+        this.Controls["idEdit"].Move(x + 112, y + 238, 70, 26)
+        this.Controls["idSet"].Move(x + 186, y + 238, 42, 26)
+        this.Controls["rightHotkeysTitle"].Move(x + 24, y + 285, width - 40, 20)
+        this.Controls["rightHotkeys"].Move(x + 24, y + 315, width - 40, 85)
+        this.Controls["rightLogTitle"].Move(x + 24, y + 430, width - 40, 20)
+        this.Controls["rightLog"].Move(x + 24, y + 460, width - 40, 60)
     }
 
     static HandleResize(gui, minMax, width, height) {
@@ -302,6 +310,16 @@ class MainWindow {
 
     static OverlayAction(*) {
         Toasts.Show("Overlay будет подключён на этапе 10.")
+    }
+
+    static SetIdAction(*) {
+        try {
+            value := IDManager.Set(this.Controls["idEdit"].Value)
+            this.Controls["currentIdValue"].Text := "ID: " value
+            Toasts.Show("Текущий ID: " value)
+        } catch Error as err {
+            ErrorHandler.Handle(err, "set patient ID")
+        }
     }
 
     static SelectBind(bindId, *) {

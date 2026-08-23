@@ -20,6 +20,8 @@ Persistent
 #Include lib\ConflictResolver.ahk
 #Include lib\HotkeyManager.ahk
 #Include lib\BindSender.ahk
+#Include lib\IDManager.ahk
+#Include lib\Variables.ahk
 #Include lib\Theme.ahk
 #Include lib\Controls.ahk
 #Include lib\Navigation.ahk

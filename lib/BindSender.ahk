@@ -92,7 +92,7 @@ class BindSender {
         settings := DataModel.Root["settings"]
         Send("t")
         Sleep(35)
-        SendText(text)
+        SendText(Variables.Resolve(text))
         Sleep(settings["enterDelay"])
         Send("{Enter}")
         Sleep(settings["chatDelay"])
