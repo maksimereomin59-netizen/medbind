@@ -76,6 +76,8 @@ class MainWindow {
         this.Controls["listCard"] := this.Gui.Add("GroupBox", "x264 y216 w846 h255 c" Theme.Get("border"), "")
         this.Controls["listHeader"] := Controls.AddLabel(this.Gui, "x286 y232 w800 h22", "#       НАЗВАНИЕ                 КЛАВИША        ДЕЙСТВИЕ                         ЗАДЕРЖКА", "muted", 8, "600")
         binds := DataModel.GetBinds()
+        if binds.Length > 0
+            State.Set("selectedBindId", binds.Length >= 2 ? binds[2]["id"] : binds[1]["id"])
         bindCount := binds.Length
         this.Controls["pageTitle"].Text := "СПИСОК БИНДОВ (" bindCount " / 100)"
         this.Controls["filterAll"].Text := "Все  " bindCount " / 100"
@@ -92,7 +94,13 @@ class MainWindow {
             key := Controls.AddLabel(this.Gui, "x510 y" (y + 8) " w65 h18", row[3], "accentBlue", 9, "600")
             action := Controls.AddLabel(this.Gui, "x590 y" (y + 8) " w300 h18", row[4], "text", 9)
             delay := Controls.AddLabel(this.Gui, "x930 y" (y + 8) " w75 h18", row[5], "muted", 9)
-            status := Controls.AddLabel(this.Gui, "x1028 y" (y + 8) " w55 h18", index = 5 ? "○ OFF" : "● ON", index = 5 ? "muted" : "green", 8, "600")
+            status := Controls.AddLabel(this.Gui, "x1028 y" (y + 8) " w55 h18", bind["enabled"] ? "● ON" : "○ OFF", bind["enabled"] ? "green" : "muted", 8, "600")
+            selectBind := ObjBindMethod(MainWindow, "SelectBind", bind["id"])
+            bg.OnEvent("Click", selectBind)
+            number.OnEvent("Click", selectBind)
+            name.OnEvent("Click", selectBind)
+            key.OnEvent("Click", selectBind)
+            action.OnEvent("Click", selectBind)
             this.SampleRows.Push({bg: bg, number: number, name: name, key: key, action: action, delay: delay, status: status})
             y += 37
         }
@@ -253,7 +261,14 @@ class MainWindow {
     }
 
     static NewBind(*) {
-        Toasts.Show("Менеджер биндов будет подключён на этапе 4.")
+        try {
+            bind := BindManager.Create()
+            State.Set("selectedBindId", bind["id"])
+            this.Refresh()
+            Toasts.Show("Создан новый бинд: " bind["name"])
+        } catch Error as err {
+            ErrorHandler.Handle(err, "create bind")
+        }
     }
 
     static TestAction(*) {
@@ -272,8 +287,52 @@ class MainWindow {
         Toasts.Show("Overlay будет подключён на этапе 10.")
     }
 
+    static SelectBind(bindId, *) {
+        try {
+            bind := BindManager.Find(bindId)
+            if !bind
+                throw Error("Bind not found: " bindId)
+            State.Set("selectedBindId", bindId)
+            this.Controls["editorTitle"].Text := "РЕДАКТОР БИНДА #" SubStr(bindId, -2)
+            this.Controls["fieldName"].Value := bind["name"]
+            this.Controls["fieldCategory"].Value := bind["categoryId"]
+            this.Controls["fieldKey"].Value := bind["hotkey"]
+            this.Controls["fieldDelay"].Value := bind["delay"]
+            this.Controls["scenario"].Value := bind["lines"].Length > 0 ? bind["lines"][1]["text"] : ""
+        } catch Error as err {
+            ErrorHandler.Handle(err, "select bind")
+        }
+    }
+
     static SaveAction(*) {
-        Toasts.Show("Изменения сохранены в текущем интерфейсе.")
+        try {
+            bindId := State.Get("selectedBindId", "")
+            if bindId = ""
+                throw Error("No bind is selected")
+            BindManager.Update(
+                bindId,
+                this.Controls["fieldName"].Value,
+                this.Controls["fieldCategory"].Value,
+                this.Controls["fieldKey"].Value,
+                this.Controls["scenario"].Value,
+                this.Controls["fieldDelay"].Value
+            )
+            this.Refresh()
+            Toasts.Show("Бинд сохранён")
+        } catch Error as err {
+            ErrorHandler.Handle(err, "save bind")
+        }
+    }
+
+    static Refresh() {
+        if this.Gui
+            this.Gui.Destroy()
+        this.Gui := false
+        this.Controls := Map()
+        this.NavControls := Map()
+        this.Create()
+        this.Gui.Show("w1400 h850")
+        WinActivate("ahk_id " this.Gui.Hwnd)
     }
 
     static SwitchPage(page) {

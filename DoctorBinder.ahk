@@ -15,6 +15,7 @@ Persistent
 #Include lib\Json.ahk
 #Include lib\DataValidation.ahk
 #Include lib\DataModel.ahk
+#Include lib\BindManager.ahk
 #Include lib\Theme.ahk
 #Include lib\Controls.ahk
 #Include lib\Navigation.ahk
