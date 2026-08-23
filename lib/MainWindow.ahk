@@ -16,8 +16,8 @@ class MainWindow {
         this.Gui.MarginX := 0
         this.Gui.MarginY := 0
         this.Gui.SetFont(Theme.Font(10, "text"), "Segoe UI")
-        this.Gui.OnEvent("Close", MainWindow.HandleClose)
-        this.Gui.OnEvent("Size", MainWindow.HandleResize)
+        this.Gui.OnEvent("Close", ObjBindMethod(MainWindow, "HandleClose"))
+        this.Gui.OnEvent("Size", ObjBindMethod(MainWindow, "HandleResize"))
 
         this.BuildTitleBar()
         this.BuildSidebar()
@@ -29,19 +29,19 @@ class MainWindow {
 
     static BuildTitleBar() {
         this.Controls["titleBar"] := this.Gui.Add("Text", "x0 y0 w1400 h48 Background" Theme.Get("sidebar"))
-        this.Controls["titleBar"].OnEvent("Click", MainWindow.BeginDrag)
+        this.Controls["titleBar"].OnEvent("Click", ObjBindMethod(MainWindow, "BeginDrag"))
         this.Controls["brand"] := Controls.AddLabel(this.Gui, "x24 y10 w300 h28", "⚡  DOCTOR BINDER V3", "accent", 14, "600")
-        this.Controls["brand"].OnEvent("Click", MainWindow.BeginDrag)
+        this.Controls["brand"].OnEvent("Click", ObjBindMethod(MainWindow, "BeginDrag"))
 
         this.Controls["search"] := this.Gui.Add("Edit", "x390 y10 w290 h28 Background" Theme.Get("card") " c" Theme.Get("muted"), "Поиск биндов  •  Ctrl+K")
         this.Controls["search"].SetFont(Theme.Font(9, "muted"), "Segoe UI")
 
         this.Controls["profile"] := Controls.AddLabel(this.Gui, "x720 y12 w240 h24", "ПРОФИЛЬ  ·  Больница LS", "muted", 9)
-        this.Controls["profile"].OnEvent("Click", MainWindow.ProfileInfo)
+        this.Controls["profile"].OnEvent("Click", ObjBindMethod(MainWindow, "ProfileInfo"))
 
-        this.Controls["minimize"] := Controls.AddButton(this.Gui, "x1300 y8 w30 h30", "—", MainWindow.Minimize)
-        this.Controls["maximize"] := Controls.AddButton(this.Gui, "x1334 y8 w30 h30", "□", MainWindow.ToggleMaximize)
-        this.Controls["close"] := Controls.AddButton(this.Gui, "x1368 y8 w30 h30", "×", MainWindow.HandleClose)
+        this.Controls["minimize"] := Controls.AddButton(this.Gui, "x1300 y8 w30 h30", "—", ObjBindMethod(MainWindow, "Minimize"))
+        this.Controls["maximize"] := Controls.AddButton(this.Gui, "x1334 y8 w30 h30", "□", ObjBindMethod(MainWindow, "ToggleMaximize"))
+        this.Controls["close"] := Controls.AddButton(this.Gui, "x1368 y8 w30 h30", "×", ObjBindMethod(MainWindow, "HandleClose"))
     }
 
     static BuildSidebar() {
@@ -66,7 +66,7 @@ class MainWindow {
         this.Controls["pageTitle"] := Controls.AddLabel(this.Gui, "x264 y78 w500 h32", "СПИСОК БИНДОВ", "text", 18, "600")
         this.Controls["pageSubtitle"] := Controls.AddLabel(this.Gui, "x264 y112 w650 h24", "Управление сценариями и быстрыми действиями", "muted", 9)
 
-        this.Controls["newBind"] := Controls.AddButton(this.Gui, "x940 y78 w170 h34", "+  НОВЫЙ БИНД", MainWindow.NewBind)
+        this.Controls["newBind"] := Controls.AddButton(this.Gui, "x940 y78 w170 h34", "+  НОВЫЙ БИНД", ObjBindMethod(MainWindow, "NewBind"))
 
         this.Controls["filterBar"] := this.Gui.Add("Text", "x264 y152 w846 h44 Background" Theme.Get("card"))
         this.Controls["filterAll"] := Controls.AddLabel(this.Gui, "x282 y166 w70 h20", "Все  0 / 100", "accent", 9, "600")
@@ -78,10 +78,10 @@ class MainWindow {
         this.Controls["emptyState"] := Controls.AddLabel(this.Gui, "x450 y360 w470 h90 Center", "БИНДЫ ЕЩЁ НЕ СОЗДАНЫ`n`nДобавьте первый сценарий кнопкой «Новый бинд»", "muted", 11)
 
         this.Controls["quickTitle"] := Controls.AddLabel(this.Gui, "x264 y650 w300 h24", "БЫСТРЫЕ ДЕЙСТВИЯ", "muted", 9, "600")
-        this.Controls["quickTest"] := Controls.AddButton(this.Gui, "x264 y682 w150 h34", "▶  ТЕСТ", MainWindow.TestAction)
-        this.Controls["quickImport"] := Controls.AddButton(this.Gui, "x424 y682 w150 h34", "↓  ИМПОРТ", MainWindow.ImportAction)
-        this.Controls["quickExport"] := Controls.AddButton(this.Gui, "x584 y682 w150 h34", "↑  ЭКСПОРТ", MainWindow.ExportAction)
-        this.Controls["quickOverlay"] := Controls.AddButton(this.Gui, "x744 y682 w150 h34", "◈  OVERLAY", MainWindow.OverlayAction)
+        this.Controls["quickTest"] := Controls.AddButton(this.Gui, "x264 y682 w150 h34", "▶  ТЕСТ", ObjBindMethod(MainWindow, "TestAction"))
+        this.Controls["quickImport"] := Controls.AddButton(this.Gui, "x424 y682 w150 h34", "↓  ИМПОРТ", ObjBindMethod(MainWindow, "ImportAction"))
+        this.Controls["quickExport"] := Controls.AddButton(this.Gui, "x584 y682 w150 h34", "↑  ЭКСПОРТ", ObjBindMethod(MainWindow, "ExportAction"))
+        this.Controls["quickOverlay"] := Controls.AddButton(this.Gui, "x744 y682 w150 h34", "◈  OVERLAY", ObjBindMethod(MainWindow, "OverlayAction"))
     }
 
     static BuildStatusBar() {

@@ -11,7 +11,8 @@ class App {
         Logger.Initialize(Storage.LogsDirectory)
         Logger.Info(Constants.AppName " " Constants.AppVersion " starting")
 
-        OnExit(App.HandleExit)
+        ; Class methods must be explicitly bound when used as callbacks in AHK v2.
+        OnExit(ObjBindMethod(App, "HandleExit"))
         this.ConfigureTray()
         MainWindow.Show()
 
@@ -27,13 +28,13 @@ class App {
 
     static ConfigureTray() {
         A_TrayMenu.Delete()
-        A_TrayMenu.Add(Constants.AppName " " Constants.AppVersion, App.TrayAbout)
+        A_TrayMenu.Add(Constants.AppName " " Constants.AppVersion, ObjBindMethod(App, "TrayAbout"))
         A_TrayMenu.Disable(Constants.AppName " " Constants.AppVersion)
         A_TrayMenu.Add()
-        A_TrayMenu.Add("Открыть Binder", App.TrayNotReady)
-        A_TrayMenu.Add("Включить / выключить", App.TrayToggle)
+        A_TrayMenu.Add("Открыть Binder", ObjBindMethod(App, "TrayNotReady"))
+        A_TrayMenu.Add("Включить / выключить", ObjBindMethod(App, "TrayToggle"))
         A_TrayMenu.Add()
-        A_TrayMenu.Add("Выход", App.TrayExit)
+        A_TrayMenu.Add("Выход", ObjBindMethod(App, "TrayExit"))
         A_TrayMenu.Default := "Открыть Binder"
         A_TrayMenu.ClickCount := 1
     }
