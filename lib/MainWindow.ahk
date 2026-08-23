@@ -132,6 +132,12 @@ class MainWindow {
 
         this.Controls["categoriesTitle"] := Controls.AddLabel(this.Gui, "x264 y704 w160 h20", "КАТЕГОРИИ", "muted", 8, "600")
         categories := [["Все", "accent"], ["Общие", "text"], ["Лечение", "green"], ["RP", "purple"], ["Операции", "accentBlue"]]
+        this.Controls["pageView"] := this.Gui.Add("Text", "x264 y216 w846 h458 Background" Theme.Get("card"))
+        this.Controls["pageViewTitle"] := Controls.AddLabel(this.Gui, "x300 y260 w650 h30", "РАЗДЕЛ", "accent", 15, "600")
+        this.Controls["pageViewText"] := Controls.AddLabel(this.Gui, "x300 y305 w650 h120", "Этот раздел готовится к подключению.", "muted", 10)
+        this.Controls["pageView"].Visible := false
+        this.Controls["pageViewTitle"].Visible := false
+        this.Controls["pageViewText"].Visible := false
         x := 345
         for category in categories {
             chip := Controls.AddLabel(this.Gui, "x" x " y700 w100 h26 Center", category[1], category[2], 8, "600")
@@ -163,8 +169,8 @@ class MainWindow {
 
         this.Controls["titleBar"].Move(0, 0, width, 48)
         this.Controls["brand"].Move(24, 10)
-        this.Controls["search"].Move(Max(350, contentWidth // 2), 10, 290, 28)
-        this.Controls["profile"].Move(width - 670, 12, 240, 24)
+        this.Controls["search"].Move(350, 10, 290, 28)
+        this.Controls["profile"].Move(width - 480, 12, 210, 24)
         this.Controls["minimize"].Move(width - 100, 8, 30, 30)
         this.Controls["maximize"].Move(width - 66, 8, 30, 30)
         this.Controls["close"].Move(width - 32, 8, 30, 30)
@@ -214,6 +220,9 @@ class MainWindow {
         this.Controls["stopButton"].Move(contentX + 636, 654)
         this.Controls["saveButton"].Move(contentX + 736, 620)
         this.Controls["categoriesTitle"].Move(contentX, 704)
+        this.Controls["pageView"].Move(contentX, 216, contentWidth - 68, Max(300, height - 390))
+        this.Controls["pageViewTitle"].Move(contentX + 36, 260)
+        this.Controls["pageViewText"].Move(contentX + 36, 305, contentWidth - 140, 120)
 
         this.BuildRightPanel(width - rightWidth, 48, rightWidth, height - 90)
     }
@@ -399,7 +408,28 @@ class MainWindow {
     static SwitchPage(page) {
         this.CurrentPage := page
         this.Controls["pageTitle"].Text := Navigation.PageTitle(page)
-        this.Controls["pageSubtitle"].Text := page = "binds" ? "Управление сценариями и быстрыми действиями" : "Раздел подготовлен для следующего этапа разработки"
+        this.Controls["pageSubtitle"].Text := page = "binds" ? "Сценарии, команды и быстрые действия" : "Рабочая область раздела"
+        bindKeys := ["newBind", "filterBar", "listCard", "listHeader", "editorCard", "editorTitle", "editorClose", "fieldNameLabel", "fieldName", "fieldCategoryLabel", "fieldCategory", "fieldKeyLabel", "fieldKey", "fieldDelayLabel", "fieldDelay", "enterToggle", "scenarioLabel", "scenario", "addLineButton", "removeLineButton", "testButton", "stopButton", "saveButton", "categoriesTitle"]
+        bindVisible := page = "binds"
+        for key in bindKeys
+            if this.Controls.Has(key)
+                this.Controls[key].Visible := bindVisible
+        for row in this.SampleRows {
+            row.bg.Visible := bindVisible
+            row.number.Visible := bindVisible
+            row.name.Visible := bindVisible
+            row.key.Visible := bindVisible
+            row.action.Visible := bindVisible
+            row.delay.Visible := bindVisible
+            row.status.Visible := bindVisible
+        }
+        this.Controls["pageView"].Visible := !bindVisible
+        this.Controls["pageViewTitle"].Visible := !bindVisible
+        this.Controls["pageViewText"].Visible := !bindVisible
+        if !bindVisible {
+            this.Controls["pageViewTitle"].Text := Navigation.PageTitle(page)
+            this.Controls["pageViewText"].Text := "Раздел " Navigation.PageTitle(page) " активен.`n`nИспользуйте доступные действия и настройки Binder."
+        }
         for key, control in this.NavControls {
             control.SetFont(Theme.Font(10, key = page ? "accent" : "muted", "600"), "Segoe UI")
         }
