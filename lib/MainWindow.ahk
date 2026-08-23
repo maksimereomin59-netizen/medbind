@@ -326,6 +326,11 @@ class MainWindow {
         Overlay.Toggle()
     }
 
+    static SetNotice(message) {
+        if this.Gui && this.Controls.Has("rightLog")
+            this.Controls["rightLog"].Text := message
+    }
+
     static HandleNewId(payload) {
         if this.Gui && this.Controls.Has("currentIdValue") {
             this.Controls["currentIdValue"].Text := "ID: " payload["id"]
