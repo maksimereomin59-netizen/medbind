@@ -32,6 +32,7 @@ Persistent
 #Include lib\RadialMenu.ahk
 #Include lib\ProfileManager.ahk
 #Include lib\PackageManager.ahk
+#Include lib\SettingsManager.ahk
 #Include lib\Theme.ahk
 #Include lib\Controls.ahk
 #Include lib\Navigation.ahk

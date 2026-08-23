@@ -412,6 +412,8 @@ class MainWindow {
             RadialMenu.Toggle()
         } else if page = "profiles" {
             ProfileManager.Show()
+        } else if page = "settings" {
+            SettingsManager.Open()
         } else if page = "overlay" {
             Overlay.Toggle()
         } else {

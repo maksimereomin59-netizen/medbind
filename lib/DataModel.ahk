@@ -19,6 +19,7 @@ class DataModel {
     static DefaultSettings() {
         return Map(
             "theme", "midnight",
+            "language", "Русский",
             "autosave", true,
             "baseDelay", 250,
             "chatDelay", 100,
