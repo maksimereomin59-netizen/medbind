@@ -15,6 +15,7 @@ class HotkeyManager {
 
     static RegisterSystemHotkeys() {
         this.Register("F12", ObjBindMethod(HotkeyManager, "ToggleBinder"), "system:F12")
+        this.Register("F10", ObjBindMethod(HotkeyManager, "ToggleOverlay"), "system:F10")
     }
 
     static RegisterBind(bind) {
@@ -74,5 +75,9 @@ class HotkeyManager {
         State.Set("binderEnabled", enabled)
         Logger.Activity("Binder " (enabled ? "enabled" : "disabled") " by F12")
         Toasts.Show(enabled ? "Binder включён" : "Binder выключен")
+    }
+
+    static ToggleOverlay(*) {
+        Overlay.Toggle()
     }
 }

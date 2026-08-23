@@ -314,7 +314,7 @@ class MainWindow {
     }
 
     static OverlayAction(*) {
-        Toasts.Show("Overlay будет подключён на этапе 10.")
+        Overlay.Toggle()
     }
 
     static HandleNewId(payload) {
@@ -322,6 +322,7 @@ class MainWindow {
             this.Controls["currentIdValue"].Text := "ID: " payload["id"]
             this.Controls["idEdit"].Value := payload["id"]
         }
+        Overlay.Refresh()
     }
 
     static SetIdAction(*) {

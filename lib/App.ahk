@@ -14,6 +14,7 @@ class App {
         Logger.Info("Data model initialized")
         IDManager.Initialize()
         ChatMonitor.Initialize()
+        Overlay.Initialize()
         HotkeyManager.Initialize()
 
         ; Class methods must be explicitly bound when used as callbacks in AHK v2.
@@ -69,6 +70,7 @@ class App {
             return
         try {
             ChatMonitor.Stop()
+            Overlay.Stop()
             BindSender.Stop(false)
             HotkeyManager.UnregisterAll()
             State.Set("isRunning", false)
