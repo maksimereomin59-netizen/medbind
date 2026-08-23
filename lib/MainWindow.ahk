@@ -414,6 +414,8 @@ class MainWindow {
             ProfileManager.Show()
         } else if page = "settings" {
             SettingsManager.Open()
+        } else if page = "statistics" {
+            StatisticsManager.Open()
         } else if page = "overlay" {
             Overlay.Toggle()
         } else {

@@ -63,6 +63,8 @@ class BindSender {
                 bind["statistics"]["lastLaunchAt"] := Core.Now()
                 DataModel.Save()
                 Logger.Activity("Bind sequence completed: " bind["id"])
+                if StatisticsManager.Gui
+                    StatisticsManager.Refresh()
                 Toasts.Show("Бинд выполнен: " bind["name"])
             }
             return
