@@ -1,12 +1,14 @@
 class MainWindow {
-    static Gui := unset
+    ; AHK v2 IsSet() accepts variables, not object properties.
+    ; Use a false sentinel until the GUI object is created.
+    static Gui := false
     static Controls := Map()
     static NavControls := Map()
     static CurrentPage := "binds"
     static IsMaximized := false
 
     static Create() {
-        if IsSet(this.Gui)
+        if this.Gui
             return this.Gui
 
         this.Gui := Gui("-Caption +Resize +MinSize1000x620", Constants.AppName)
@@ -96,7 +98,7 @@ class MainWindow {
     }
 
     static Layout(width, height) {
-        if !IsSet(this.Gui)
+        if !this.Gui
             return
         width := Max(width, 1000)
         height := Max(height, 620)
