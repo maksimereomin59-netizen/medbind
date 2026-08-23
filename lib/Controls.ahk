@@ -7,7 +7,7 @@ class Controls {
 
     static AddButton(gui, options, text, callback := unset) {
         gui.SetFont(Theme.Font(10, "text"), "Segoe UI")
-        options := options " -Theme"
+        options := options " -Theme +Background142238 c" Theme.Get("text")
         control := gui.Add("Button", options, text)
         if IsSet(callback)
             control.OnEvent("Click", (*) => callback())
