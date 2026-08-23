@@ -276,7 +276,7 @@ class MainWindow {
     }
 
     static ProfileInfo(*) {
-        Toasts.Show("Редактор профилей будет доступен на этапе 12.")
+        ProfileManager.Show()
     }
 
     static NewBind(*) {
@@ -410,6 +410,8 @@ class MainWindow {
                 ErrorHandler.Handle(err, "configure chat monitor")
         } else if page = "radial" {
             RadialMenu.Toggle()
+        } else if page = "profiles" {
+            ProfileManager.Show()
         } else if page = "overlay" {
             Overlay.Toggle()
         } else {
