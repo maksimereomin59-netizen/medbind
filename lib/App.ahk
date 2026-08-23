@@ -12,6 +12,7 @@ class App {
         Logger.Info(Constants.AppName " " Constants.AppVersion " starting")
         DataModel.Initialize()
         Logger.Info("Data model initialized")
+        HotkeyManager.Initialize()
 
         ; Class methods must be explicitly bound when used as callbacks in AHK v2.
         OnExit(ObjBindMethod(App, "HandleExit"))
@@ -65,6 +66,7 @@ class App {
         if !this.started
             return
         try {
+            HotkeyManager.UnregisterAll()
             State.Set("isRunning", false)
             Logger.Info("Binder stopped. Reason: " exitReason "; code: " exitCode)
         }
