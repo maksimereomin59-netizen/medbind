@@ -26,6 +26,7 @@ Persistent
 #Include lib\ChatParser.ahk
 #Include lib\ChatMonitor.ahk
 #Include lib\Overlay.ahk
+#Include lib\RadialMenu.ahk
 #Include lib\Theme.ahk
 #Include lib\Controls.ahk
 #Include lib\Navigation.ahk

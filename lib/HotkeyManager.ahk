@@ -16,6 +16,7 @@ class HotkeyManager {
     static RegisterSystemHotkeys() {
         this.Register("F12", ObjBindMethod(HotkeyManager, "ToggleBinder"), "system:F12")
         this.Register("F10", ObjBindMethod(HotkeyManager, "ToggleOverlay"), "system:F10")
+        this.Register("F11", ObjBindMethod(HotkeyManager, "ToggleRadial"), "system:F11")
     }
 
     static RegisterBind(bind) {
@@ -79,5 +80,9 @@ class HotkeyManager {
 
     static ToggleOverlay(*) {
         Overlay.Toggle()
+    }
+
+    static ToggleRadial(*) {
+        RadialMenu.Toggle()
     }
 }

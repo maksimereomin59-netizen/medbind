@@ -229,7 +229,7 @@ class MainWindow {
             this.Controls["idEdit"] := this.Gui.Add("Edit", "Background" Theme.Get("card") " c" Theme.Get("text"), IDManager.Get())
             this.Controls["idSet"] := Controls.AddButton(this.Gui, "", "SET", ObjBindMethod(MainWindow, "SetIdAction"))
             this.Controls["rightHotkeysTitle"] := Controls.AddLabel(this.Gui, "", "HOTKEYS", "muted", 9, "600")
-            this.Controls["rightHotkeys"] := Controls.AddLabel(this.Gui, "", "Ctrl+K    Command Palette`nF12       Toggle Binder`nF10       Overlay", "text", 9)
+            this.Controls["rightHotkeys"] := Controls.AddLabel(this.Gui, "", "F12       Toggle Binder`nF10       Overlay`nF11       Radial Menu", "text", 9)
             this.Controls["rightLogTitle"] := Controls.AddLabel(this.Gui, "", "LAST ACTION", "muted", 9, "600")
             this.Controls["rightLog"] := Controls.AddLabel(this.Gui, "", "Binder started successfully", "muted", 9)
         }
@@ -323,6 +323,7 @@ class MainWindow {
             this.Controls["idEdit"].Value := payload["id"]
         }
         Overlay.Refresh()
+        RadialMenu.Refresh()
     }
 
     static SetIdAction(*) {
@@ -407,6 +408,10 @@ class MainWindow {
             try ChatMonitor.Configure()
             catch Error as err
                 ErrorHandler.Handle(err, "configure chat monitor")
+        } else if page = "radial" {
+            RadialMenu.Toggle()
+        } else if page = "overlay" {
+            Overlay.Toggle()
         } else {
             Toasts.Show("Открыт раздел: " Navigation.PageTitle(page))
         }
