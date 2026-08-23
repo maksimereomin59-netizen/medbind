@@ -36,7 +36,7 @@ class RadialMenu {
         this.Refresh()
         x := A_ScreenWidth // 2 - 210
         y := A_ScreenHeight // 2 - 210
-        this.Gui.Show("x" x " y" y " w420 h420 NoActivate")
+        this.Gui.Show("x" x " y" y " w420 h420 NA")
         WinSetTransparent(245, "ahk_id " this.Gui.Hwnd)
         this.Visible := true
         State.Set("radialVisible", true)

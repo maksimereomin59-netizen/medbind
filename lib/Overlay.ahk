@@ -33,7 +33,7 @@ class Overlay {
             this.Labels.Push(label)
         }
         this.Gui.OnEvent("Close", ObjBindMethod(Overlay, "Hide"))
-        this.Gui.Show("x40 y120 w300 h220 NoActivate")
+        this.Gui.Show("x40 y120 w300 h220 NA")
         WinSetTransparent(230, "ahk_id " this.Gui.Hwnd)
         WinSetAlwaysOnTop(true, "ahk_id " this.Gui.Hwnd)
         this.Gui.Hide()
@@ -45,7 +45,7 @@ class Overlay {
         x := settings.Has("x") ? settings["x"] : 40
         y := settings.Has("y") ? settings["y"] : 120
         this.Refresh()
-        this.Gui.Show("x" x " y" y " w300 h220 NoActivate")
+        this.Gui.Show("x" x " y" y " w300 h220 NA")
         WinSetTransparent(230, "ahk_id " this.Gui.Hwnd)
         this.Visible := true
         State.Set("overlayVisible", true)
