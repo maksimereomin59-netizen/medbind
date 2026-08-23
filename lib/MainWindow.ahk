@@ -118,9 +118,11 @@ class MainWindow {
         this.Controls["fieldDelay"] := this.Gui.Add("Edit", "x798 y558 w100 h28 Background" Theme.Get("card") " c" Theme.Get("text"), "500")
         this.Controls["enterToggle"] := Controls.AddLabel(this.Gui, "x920 y566 w160 h18", "○  ENTER ПОСЛЕ СТРОКИ", "muted", 8)
         this.Controls["scenarioLabel"] := Controls.AddLabel(this.Gui, "x286 y600 w160 h18", "ТЕКСТ СЦЕНАРИЯ", "muted", 8, "600")
-        this.Controls["scenario"] := this.Gui.Add("Edit", "x286 y620 w610 h34 Background" Theme.Get("card") " c" Theme.Get("text"), "/me передал таблетку пациенту")
-        this.Controls["testButton"] := Controls.AddButton(this.Gui, "x915 y620 w90 h30", "▶ ТЕСТ", ObjBindMethod(MainWindow, "TestAction"))
-        this.Controls["saveButton"] := Controls.AddButton(this.Gui, "x1015 y620 w75 h30", "СОХРАНИТЬ", ObjBindMethod(MainWindow, "SaveAction"))
+        this.Controls["scenario"] := this.Gui.Add("Edit", "x286 y620 w500 h42 +Multi Background" Theme.Get("card") " c" Theme.Get("text"), "/me передал таблетку пациенту")
+        this.Controls["addLineButton"] := Controls.AddButton(this.Gui, "x800 y620 w90 h30", "+ СТРОКА", ObjBindMethod(MainWindow, "AddLine"))
+        this.Controls["removeLineButton"] := Controls.AddButton(this.Gui, "x800 y654 w90 h30", "− СТРОКА", ObjBindMethod(MainWindow, "RemoveLine"))
+        this.Controls["testButton"] := Controls.AddButton(this.Gui, "x900 y620 w90 h30", "▶ ТЕСТ", ObjBindMethod(MainWindow, "TestAction"))
+        this.Controls["saveButton"] := Controls.AddButton(this.Gui, "x1000 y620 w90 h30", "СОХРАНИТЬ", ObjBindMethod(MainWindow, "SaveAction"))
 
         this.Controls["categoriesTitle"] := Controls.AddLabel(this.Gui, "x264 y704 w160 h20", "КАТЕГОРИИ", "muted", 8, "600")
         categories := [["Все", "accent"], ["Общие", "text"], ["Лечение", "green"], ["RP", "purple"], ["Операции", "accentBlue"]]
@@ -199,9 +201,11 @@ class MainWindow {
         this.Controls["fieldDelay"].Move(contentX + 534, 558)
         this.Controls["enterToggle"].Move(contentX + 656, 566)
         this.Controls["scenarioLabel"].Move(contentX + 22, 600)
-        this.Controls["scenario"].Move(contentX + 22, 620, 610, 34)
-        this.Controls["testButton"].Move(contentX + 651, 620)
-        this.Controls["saveButton"].Move(contentX + 751, 620)
+        this.Controls["scenario"].Move(contentX + 22, 620, 500, 42)
+        this.Controls["addLineButton"].Move(contentX + 536, 620)
+        this.Controls["removeLineButton"].Move(contentX + 536, 654)
+        this.Controls["testButton"].Move(contentX + 636, 620)
+        this.Controls["saveButton"].Move(contentX + 736, 620)
         this.Controls["categoriesTitle"].Move(contentX, 704)
 
         this.BuildRightPanel(width - rightWidth, 48, rightWidth, height - 90)
@@ -298,10 +302,22 @@ class MainWindow {
             this.Controls["fieldCategory"].Value := bind["categoryId"]
             this.Controls["fieldKey"].Value := bind["hotkey"]
             this.Controls["fieldDelay"].Value := bind["delay"]
-            this.Controls["scenario"].Value := bind["lines"].Length > 0 ? bind["lines"][1]["text"] : ""
+            lines := []
+            for line in bind["lines"]
+                if line["enabled"]
+                    lines.Push(line["text"])
+            this.Controls["scenario"].Value := BindEditor.JoinLines(lines)
         } catch Error as err {
             ErrorHandler.Handle(err, "select bind")
         }
+    }
+
+    static AddLine(*) {
+        this.Controls["scenario"].Value := BindEditor.AddLine(this.Controls["scenario"].Value)
+    }
+
+    static RemoveLine(*) {
+        this.Controls["scenario"].Value := BindEditor.RemoveLastLine(this.Controls["scenario"].Value)
     }
 
     static SaveAction(*) {

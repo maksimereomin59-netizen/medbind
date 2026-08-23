@@ -29,11 +29,19 @@ class BindManager {
         bind["categoryId"] := categoryId != "" ? categoryId : "general"
         bind["hotkey"] := hotkey
         bind["delay"] := Max(0, Integer(delay = "" ? 0 : delay))
-        if bind["lines"].Length = 0
-            bind["lines"].Push(Map("id", bindId "-line-001", "text", text, "delay", bind["delay"], "enabled", true, "sendEnter", true, "type", "command"))
-        else
-            bind["lines"][1]["text"] := text
-        bind["lines"][1]["delay"] := bind["delay"]
+        bind["lines"] := []
+        lineNumber := 1
+        for lineText in BindEditor.SplitLines(text) {
+            bind["lines"].Push(Map(
+                "id", bindId "-line-" Format("{1:03}", lineNumber),
+                "text", lineText,
+                "delay", bind["delay"],
+                "enabled", true,
+                "sendEnter", true,
+                "type", "command"
+            ))
+            lineNumber += 1
+        }
         DataModel.Save()
         Logger.Activity("Updated bind: " bindId)
         return bind
