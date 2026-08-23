@@ -12,6 +12,11 @@ Persistent
 #Include lib\Logger.ahk
 #Include lib\ErrorHandler.ahk
 #Include lib\Storage.ahk
+#Include lib\Theme.ahk
+#Include lib\Controls.ahk
+#Include lib\Navigation.ahk
+#Include lib\Toasts.ahk
+#Include lib\MainWindow.ahk
 #Include lib\App.ahk
 
 try {

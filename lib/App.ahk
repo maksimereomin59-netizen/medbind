@@ -13,6 +13,7 @@ class App {
 
         OnExit(App.HandleExit)
         this.ConfigureTray()
+        MainWindow.Show()
 
         State.Set("initialized", true)
         State.Set("isRunning", true)
@@ -42,7 +43,7 @@ class App {
     }
 
     static TrayNotReady(*) {
-        MsgBox("Главное окно будет добавлено на этапе 2.", Constants.AppName, "Iconi")
+        MainWindow.Show()
     }
 
     static TrayToggle(*) {
