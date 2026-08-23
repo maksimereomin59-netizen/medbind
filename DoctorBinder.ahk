@@ -28,6 +28,7 @@ Persistent
 #Include lib\Overlay.ahk
 #Include lib\RadialMenu.ahk
 #Include lib\ProfileManager.ahk
+#Include lib\PackageManager.ahk
 #Include lib\Theme.ahk
 #Include lib\Controls.ahk
 #Include lib\Navigation.ahk

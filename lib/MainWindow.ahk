@@ -306,11 +306,11 @@ class MainWindow {
     }
 
     static ImportAction(*) {
-        Toasts.Show("Импорт и экспорт будут подключены на этапе 13.")
+        PackageManager.ImportProfile()
     }
 
     static ExportAction(*) {
-        Toasts.Show("Импорт и экспорт будут подключены на этапе 13.")
+        PackageManager.ExportCurrent()
     }
 
     static OverlayAction(*) {
