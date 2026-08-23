@@ -11,7 +11,7 @@ class SettingsManager {
         this.Gui := Gui("+Resize +MinSize520x430", "Настройки — " Constants.AppName)
         this.Gui.SetFont(Theme.Font(10, "text"), "Segoe UI")
         this.Gui.Add("Text", "x20 y18 w460 h25", "НАСТРОЙКИ DOCTOR BINDER V3")
-        tabs := this.Gui.Add("Tab3", "x18 y55 w484 h300", ["Общие", "Отправка", "Chat Monitor", "Overlay"])
+        tabs := this.Gui.Add("Tab3", "x18 y55 w484 h300", ["Общие", "Отправка", "Chat Monitor", "Overlay", "Telegram"])
 
         tabs.UseTab(1)
         this.Controls["autosave"] := this.Gui.Add("CheckBox", "x40 y95 w220 h25", "Автосохранение")
@@ -44,9 +44,17 @@ class SettingsManager {
         this.Gui.Add("Text", "x40 y140 w220 h20", "Прозрачность, 0–255")
         this.Controls["overlayOpacity"] := this.Gui.Add("Edit", "x270 y137 w100 h26")
         this.Controls["overlayEnabled"] := this.Gui.Add("CheckBox", "x40 y190 w300 h25", "Показывать Overlay при запуске")
+        tabs.UseTab(5)
+        this.Gui.Add("Text", "x40 y95 w220 h20", "Bot Token")
+        this.Controls["telegramToken"] := this.Gui.Add("Edit", "x40 y125 w420 h26 Password")
+        this.Gui.Add("Text", "x40 y165 w220 h20", "Chat ID")
+        this.Controls["telegramChatId"] := this.Gui.Add("Edit", "x40 y195 w220 h26")
+        this.Controls["telegramEnabled"] := this.Gui.Add("CheckBox", "x40 y240 w300 h25", "Включить Telegram")
+        this.Controls["telegramTest"] := this.Gui.Add("Button", "x40 y275 w180 h28", "ТЕСТОВОЕ СООБЩЕНИЕ")
+        this.Controls["telegramTest"].OnEvent("Click", ObjBindMethod(SettingsManager, "TelegramTest"))
         tabs.UseTab()
 
-        this.Controls["save"] := this.Gui.Add("Button", "x300 y375 w100 h32", "СОХРАНИТЬ")
+        this.Controls["save"] := this.Gui.Add("Button", "x300 y375 w100 h32", "СОХРАНИТЬ") := this.Gui.Add("Button", "x300 y375 w100 h32", "СОХРАНИТЬ")
         this.Controls["save"].OnEvent("Click", ObjBindMethod(SettingsManager, "Save"))
         this.Controls["cancel"] := this.Gui.Add("Button", "x410 y375 w90 h32", "ОТМЕНА")
         this.Controls["cancel"].OnEvent("Click", ObjBindMethod(SettingsManager, "Close"))
@@ -66,6 +74,9 @@ class SettingsManager {
         this.Controls["jitter"].Value := settings.Has("jitter") ? settings["jitter"] : 0
         this.Controls["chatLogPath"].Value := settings.Has("chatLogPath") ? settings["chatLogPath"] : ""
         this.Controls["chatEnabled"].Value := settings.Has("chatMonitorEnabled") ? settings["chatMonitorEnabled"] : false
+        this.Controls["telegramToken"].Value := settings.Has("telegramToken") ? settings["telegramToken"] : ""
+        this.Controls["telegramChatId"].Value := settings.Has("telegramChatId") ? settings["telegramChatId"] : ""
+        this.Controls["telegramEnabled"].Value := settings.Has("telegramEnabled") ? settings["telegramEnabled"] : false
         overlay := DataModel.CurrentProfile["overlay"]
         this.Controls["overlayScale"].Value := overlay.Has("scale") ? overlay["scale"] : 1.0
         this.Controls["overlayOpacity"].Value := overlay.Has("opacity") ? Round(overlay["opacity"] * 255) : 230
@@ -84,6 +95,10 @@ class SettingsManager {
             settings["jitter"] := this.Number(this.Controls["jitter"].Value, 0)
             settings["chatLogPath"] := this.Controls["chatLogPath"].Value
             settings["chatMonitorEnabled"] := this.Controls["chatEnabled"].Value = 1
+            settings["telegramToken"] := this.Controls["telegramToken"].Value
+            settings["telegramChatId"] := this.Controls["telegramChatId"].Value
+            settings["telegramEnabled"] := this.Controls["telegramEnabled"].Value = 1
+            Telegram.Enabled := settings["telegramEnabled"]
             overlay := DataModel.CurrentProfile["overlay"]
             overlay["scale"] := Max(0.5, this.Number(this.Controls["overlayScale"].Value, 1.0))
             overlay["opacity"] := Max(0.1, Min(1.0, this.Number(this.Controls["overlayOpacity"].Value, 230) / 255))
@@ -102,6 +117,15 @@ class SettingsManager {
         } catch Error as err {
             ErrorHandler.Handle(err, "save settings")
         }
+    }
+
+    static TelegramTest(*) {
+        settings := DataModel.Root["settings"]
+        settings["telegramToken"] := this.Controls["telegramToken"].Value
+        settings["telegramChatId"] := this.Controls["telegramChatId"].Value
+        settings["telegramEnabled"] := true
+        Telegram.Enabled := true
+        Telegram.Test()
     }
 
     static BrowseChat(*) {

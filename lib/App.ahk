@@ -16,6 +16,7 @@ class App {
         ChatMonitor.Initialize()
         Overlay.Initialize()
         RadialMenu.Initialize()
+        Telegram.Initialize()
         HotkeyManager.Initialize()
 
         ; Class methods must be explicitly bound when used as callbacks in AHK v2.

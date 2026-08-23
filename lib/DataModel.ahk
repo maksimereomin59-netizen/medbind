@@ -26,6 +26,9 @@ class DataModel {
             "enterDelay", 80,
             "jitter", 0,
             "chatMonitorEnabled", false,
+            "telegramEnabled", false,
+            "telegramToken", "",
+            "telegramChatId", "",
             "overlayEnabled", false
         )
     }

@@ -34,6 +34,7 @@ Persistent
 #Include lib\PackageManager.ahk
 #Include lib\SettingsManager.ahk
 #Include lib\StatisticsManager.ahk
+#Include lib\Telegram.ahk
 #Include lib\Theme.ahk
 #Include lib\Controls.ahk
 #Include lib\Navigation.ahk
